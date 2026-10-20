@@ -1,3 +1,9 @@
+> **What it is:** Node library and CLI (`protect-mcp`) that proxies an MCP server over stdio, with an optional HTTP listener, intercepts MCP `tools/call` requests, evaluates a local policy, and can write Ed25519-signed decision receipts.
+> **Status:** DORMANT as of 2026-10-19 (@01d2d89)
+> **Live at:** not deployed
+> **Canonical home:** getboring/scopeblind-gateway
+> **Run it:** `npm test`; `npm run build`
+
 > **⚠️ This repository has moved.** Active development continues at **[ScopeBlind/scopeblind-gateway](https://github.com/ScopeBlind/scopeblind-gateway)**.
 >
 > This personal fork may be behind the canonical repository. Please use the org repo for issues, pull requests, and the latest code.
@@ -11,7 +17,7 @@ Security gateway for MCP servers. Shadow-mode logs by default, per-tool policies
 ## Quick Start
 
 ```bash
-# Wrap an existing OpenClaw / MCP config into a usable pack
+# @scopeblind/passport (npm bin passport); this package bin is protect-mcp
 npx @scopeblind/passport wrap --runtime openclaw --config ./openclaw.json --policy email-safe
 
 # Shadow mode — log every tool call, enforce nothing
@@ -59,8 +65,8 @@ These are important before you roll this out or talk to users:
 
 - **Signing is not automatic on the bare `npx protect-mcp -- ...` path.** That path logs decisions in shadow mode. For local signing, run `npx protect-mcp init` and then start the gateway with the generated policy file.
 - **Tier-aware policy checks are live, but manifest admission is not wired into the default CLI/stdio path.** The CLI defaults sessions to `unknown` unless a host integration calls the admission API programmatically.
-- **Credential config currently validates env-backed credential references and records credential labels in logs/receipts.** Generic per-call injection into arbitrary stdio tools is adapter-specific and is not performed by the default proxy path.
-- **External PDP adapters and audit bundle helpers exist as exported utilities.** They are not yet fully wired into the default CLI path.
+- **Credential config currently validates env-backed credential references and records credential labels in logs/receipts.** On the default proxy path, inject "env" copies that env value onto the child process at startup, and inject "header" or "query" adds params._credentials on each forwarded JSON-RPC request.
+- **External PDP adapters and audit bundle helpers exist as exported utilities.** The default CLI path calls them: the stdio gateway queries the external PDP when policy_engine is "external" or "hybrid", and `protect-mcp bundle` writes an audit bundle.
 
 ## Policy File
 
@@ -93,7 +99,7 @@ These are important before you roll this out or talk to users:
 | Field | Values | Description |
 |-------|--------|-------------|
 | `block` | `true` | Explicitly block this tool |
-| `require` | `"any"`, `"none"` | Basic access requirement |
+| `require` | `"gateway"`, `"any"`, `"none"` | Not read by the tool-call intercept path |
 | `min_tier` | `"unknown"`, `"signed-known"`, `"evidenced"`, `"privileged"` | Minimum tier required if your host sets admission state |
 | `rate_limit` | `"N/unit"` | Rate limit (e.g. `"5/hour"`, `"100/day"`) |
 
@@ -230,11 +236,11 @@ Ship with protect-mcp — each prevents a real attack:
 npx protect-mcp --policy node_modules/protect-mcp/policies/clinejection.json -- node server.js
 ```
 
-Full OWASP Agentic Top 10 mapping: [scopeblind.com/docs/owasp](https://scopeblind.com/docs/owasp)
+[scopeblind.com/docs/owasp](https://scopeblind.com/docs/owasp) returned HTTP 404 on 2026-10-19.
 
 ## BYOPE: External Policy Engines
 
-Supports OPA, Cerbos, Cedar (AWS AgentCore), and generic HTTP endpoints:
+Supports OPA, Cerbos, Cedar (AWS), and generic HTTP endpoints:
 
 ```json
 {
@@ -258,4 +264,4 @@ Supports OPA, Cerbos, Cedar (AWS AgentCore), and generic HTTP endpoints:
 
 MIT — free to use, modify, distribute, and build upon without restriction.
 
-[scopeblind.com](https://scopeblind.com) · [npm](https://www.npmjs.com/package/protect-mcp) · [GitHub](https://github.com/scopeblind/ScopeBlindD2) · [IETF Draft](https://datatracker.ietf.org/doc/draft-farley-acta-signed-receipts/)
+[scopeblind.com](https://scopeblind.com) · [npm](https://www.npmjs.com/package/protect-mcp) · [GitHub](https://github.com/scopeblind/scopeblind-gateway) · [IETF Draft](https://datatracker.ietf.org/doc/draft-farley-acta-signed-receipts/)
