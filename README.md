@@ -1,7 +1,7 @@
 > **What it is:** Node library and CLI (`protect-mcp`) that proxies an MCP server over stdio, with an optional HTTP listener, intercepts MCP `tools/call` requests, evaluates a local policy, and can write Ed25519-signed decision receipts.
 > **Status:** DORMANT as of 2026-10-19 (@01d2d89)
 > **Live at:** not deployed
-> **Canonical home:** getboring/scopeblind-gateway
+> **Canonical home:** getboring/protect-mcp
 > **Run it:** `npm test`; `npm run build`
 
 > **⚠️ This repository has moved.** Active development continues at **[ScopeBlind/scopeblind-gateway](https://github.com/ScopeBlind/scopeblind-gateway)**.
