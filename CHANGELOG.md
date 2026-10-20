@@ -10,7 +10,7 @@
 - Audit bundle export via `protect-mcp bundle`
 - `protect-mcp simulate` — dry-run policy evaluation against recorded tool calls
 - `protect-mcp report` — compliance report generation (JSON + Markdown)
-- Policy packs: shadow, web-browsing-safe, email-safe, strict
+- Policy packs: clinejection.json, terraform-destroy.json, github-mcp-hijack.json, data-exfiltration.json, financial-safe.json
 - Local HTTP status server with receipt API and approval endpoints
 
 ### Changed
